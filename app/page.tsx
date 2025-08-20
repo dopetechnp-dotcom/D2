@@ -1185,35 +1185,35 @@ export default function DopeTechEcommerce() {
               </p>
             </div>
 
-            {/* Category Filter - Mobile Optimized Spacing */}
-            <div ref={categorySectionRef} className="mb-6 sm:mb-12 px-4 animate-fade-in-up stagger-5">
-              {/* Unified Category Layout */}
-              <div className="flex flex-wrap justify-center gap-3 w-full">
-                {categories.map((category, index) => (
-                  <div key={category.id} className="relative animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
-                    <button
-                      onClick={() => handleCategoryClick(category.id)}
-                      className={`flex items-center space-x-2 px-4 py-3 rounded-full transition-all duration-300 cursor-pointer text-sm min-h-[48px] shadow-lg ${
-                        selectedCategory === category.id
-                          ? "bg-[#F7DD0F] text-black font-bold"
-                          : "bg-white/10 hover:bg-white/15 font-medium border border-white/10"
-                      }`}
-                      aria-label={`Filter by ${category.name}`}
-                    >
-                      {/* Category Icon */}
-                      <div className={`flex-shrink-0 ${
-                        selectedCategory === category.id ? "text-black" : "text-[#F7DD0F]"
-                      }`}>
-                        {renderCategoryIcon(category.icon, "w-5 h-5")}
-                      </div>
-                      
-                      {/* Category Name */}
-                      <span className="font-medium">{category.name}</span>
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
+                         {/* Category Filter - Mobile Optimized Spacing */}
+             <div ref={categorySectionRef} className="mb-6 sm:mb-12 px-4 animate-fade-in-up stagger-5">
+               {/* Horizontal Scroll Layout for Mobile, Flex Wrap for Desktop */}
+               <div className="flex overflow-x-auto scrollbar-hide gap-3 sm:flex-wrap sm:justify-center w-full">
+                 {categories.map((category, index) => (
+                   <div key={category.id} className="relative animate-fade-in-up flex-shrink-0 sm:flex-shrink" style={{ animationDelay: `${index * 0.1}s` }}>
+                     <button
+                       onClick={() => handleCategoryClick(category.id)}
+                       className={`flex items-center space-x-2 px-4 py-3 rounded-full transition-all duration-300 cursor-pointer text-sm min-h-[48px] shadow-lg whitespace-nowrap ${
+                         selectedCategory === category.id
+                           ? "bg-[#F7DD0F] text-black font-bold"
+                           : "bg-white/10 hover:bg-white/15 font-medium border border-white/10"
+                       }`}
+                       aria-label={`Filter by ${category.name}`}
+                     >
+                       {/* Category Icon */}
+                       <div className={`flex-shrink-0 ${
+                         selectedCategory === category.id ? "text-black" : "text-[#F7DD0F]"
+                       }`}>
+                         {renderCategoryIcon(category.icon, "w-5 h-5")}
+                       </div>
+                       
+                       {/* Category Name */}
+                       <span className="font-medium">{category.name}</span>
+                     </button>
+                   </div>
+                 ))}
+               </div>
+             </div>
           </div>
 
           {/* Products Grid - Mobile Optimized 2x2 */}
