@@ -1,0 +1,22 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#F7DD0F" stroke="#F7DD0F" stroke-width="2"/>
+  
+  <!-- DopeTech text -->
+  <text x="60" y="45" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000000">DOPE</text>
+  <text x="60" y="65" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" font-weight="bold" fill="#000000">TECH</text>
+  
+  <!-- Tech icon elements -->
+  <rect x="25" y="75" width="8" height="8" fill="#000000" rx="1"/>
+  <rect x="37" y="75" width="8" height="8" fill="#000000" rx="1"/>
+  <rect x="49" y="75" width="8" height="8" fill="#000000" rx="1"/>
+  <rect x="61" y="75" width="8" height="8" fill="#000000" rx="1"/>
+  <rect x="73" y="75" width="8" height="8" fill="#000000" rx="1"/>
+  <rect x="85" y="75" width="8" height="8" fill="#000000" rx="1"/>
+  
+  <!-- Decorative elements -->
+  <circle cx="30" cy="30" r="3" fill="#000000" opacity="0.3"/>
+  <circle cx="90" cy="30" r="3" fill="#000000" opacity="0.3"/>
+  <circle cx="30" cy="90" r="3" fill="#000000" opacity="0.3"/>
+  <circle cx="90" cy="90" r="3" fill="#000000" opacity="0.3"/>
+</svg>

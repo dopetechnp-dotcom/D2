@@ -1,0 +1,26 @@
+{
+  "name": "DopeTech Nepal",
+  "short_name": "DopeTech",
+  "description": "Premium Tech Gear from DopeTech Nepal",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#F7DD0F",
+  "icons": [
+    {
+      "src": "/logo/favicon.svg",
+      "sizes": "32x32",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/logo/favicon.svg",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/logo/favicon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ]
+}
