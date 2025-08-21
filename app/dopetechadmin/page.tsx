@@ -16,7 +16,8 @@ import {
   ImageIcon,
   Upload,
   Video,
-  QrCode
+  QrCode,
+  RefreshCw
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import { Product, ProductImage, getProducts, addProduct, updateProduct, deleteProduct, getProductImages, addProductImage, deleteProductImage, setPrimaryImage, reorderProductImages } from '@/lib/products-data'
@@ -26,6 +27,8 @@ import { HeroImageManager } from '@/components/hero-image-manager'
 import { QRCodeManager } from '@/components/qr-code-manager'
 import { OrdersManager } from '@/components/orders-manager'
 import { ErrorBoundary } from '@/components/error-boundary'
+import { useToast } from '@/hooks/use-toast'
+import { Toaster } from '@/components/ui/toaster'
 
 interface LoginScreenProps {
   password: string
@@ -74,11 +77,13 @@ function LoginScreen({ password, setPassword, handleLogin }: LoginScreenProps) {
 }
 
 export default function AdminPage() {
+  const { toast } = useToast()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
   const [products, setProducts] = useState<Product[]>([])
   const [assets, setAssets] = useState<any[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [filter, setFilter] = useState('all')
   const [activeTab, setActiveTab] = useState('products')
@@ -145,14 +150,50 @@ export default function AdminPage() {
     }
   }, [isAuthenticated])
 
+  // Real-time subscription to product changes in admin panel
+  useEffect(() => {
+    if (!isAuthenticated) return
+
+    const subscription = supabase
+      .channel('admin-products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products'
+        },
+        (payload) => {
+          // Refresh products when any change occurs
+          fetchProducts()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [isAuthenticated])
+
   const fetchProducts = async () => {
     try {
+      setRefreshing(true)
       const productsData = await getProducts()
       setProducts(productsData)
+      toast({
+        title: "Refreshed!",
+        description: `Loaded ${productsData.length} products`,
+      })
     } catch (error) {
       console.error('Error fetching products:', error)
+      toast({
+        title: "Error",
+        description: "Failed to refresh products",
+        variant: "destructive",
+      })
     } finally {
       setLoading(false)
+      setRefreshing(false)
     }
   }
 
@@ -208,14 +249,28 @@ export default function AdminPage() {
           await addProductImage(newProduct.id, image.image_url, image.file_name, image.is_primary)
         }
 
+        // Update local products array
         setProducts([...products, newProduct])
+        
+        // Also refresh from database to ensure consistency
+        await fetchProducts()
+        
         setShowAddModal(false)
         resetForm()
         setNewProductImages([])
+        
+        toast({
+          title: "Success!",
+          description: "Product added successfully",
+        })
       }
     } catch (error) {
       console.error('Error adding product:', error)
-      alert('Failed to add product')
+      toast({
+        title: "Error",
+        description: "Failed to add product",
+        variant: "destructive",
+      })
     }
   }
 
@@ -244,15 +299,29 @@ export default function AdminPage() {
       })
 
       if (updatedProduct) {
+        // Update the local products array
         setProducts(products.map(p => p.id === editingProduct.id ? updatedProduct : p))
+        
+        // Also refresh from database to ensure consistency
+        await fetchProducts()
+        
         setShowEditModal(false)
         setEditingProduct(null)
         resetForm()
         setProductImages([])
+        
+        toast({
+          title: "Success!",
+          description: "Product updated successfully",
+        })
       }
     } catch (error) {
       console.error('Error updating product:', error)
-      alert('Failed to update product')
+      toast({
+        title: "Error",
+        description: "Failed to update product",
+        variant: "destructive",
+      })
     }
   }
 
@@ -262,11 +331,24 @@ export default function AdminPage() {
     try {
       const success = await deleteProduct(productId)
       if (success) {
+        // Update local products array
         setProducts(products.filter(p => p.id !== productId))
+        
+        // Also refresh from database to ensure consistency
+        await fetchProducts()
+        
+        toast({
+          title: "Success!",
+          description: "Product deleted successfully",
+        })
       }
     } catch (error) {
       console.error('Error deleting product:', error)
-      alert('Failed to delete product')
+      toast({
+        title: "Error",
+        description: "Failed to delete product",
+        variant: "destructive",
+      })
     }
   }
 
@@ -391,6 +473,20 @@ export default function AdminPage() {
                 </div>
               </div>
             
+              <button
+                onClick={fetchProducts}
+                disabled={refreshing}
+                className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 rounded-lg transition-all duration-200 ${
+                  refreshing 
+                    ? 'bg-blue-500/30 text-blue-200 cursor-not-allowed' 
+                    : 'bg-blue-500/20 hover:bg-blue-500/30 text-blue-300 hover:text-blue-200'
+                }`}
+                title="Refresh products"
+              >
+                <RefreshCw className={`w-4 h-4 ${refreshing ? 'animate-spin' : ''}`} />
+                <span className="hidden sm:inline">{refreshing ? 'Refreshing...' : 'Refresh'}</span>
+              </button>
+              
               <button
                 onClick={handleLogout}
                 className="flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 bg-red-500/20 hover:bg-red-500/30 rounded-lg transition-all duration-200 text-red-300 hover:text-red-200"
@@ -1002,6 +1098,8 @@ export default function AdminPage() {
           </div>
         </div>
       )}
+      
+      <Toaster />
     </div>
   )
 }

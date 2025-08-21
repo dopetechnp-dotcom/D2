@@ -134,25 +134,25 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
         </div>
       )}
 
-             {/* Marquee Container */}
-       <div
-         ref={containerRef}
-         className={`
-           relative overflow-x-auto scrollbar-hide cursor-grab fluid-scroll drag-feedback
-           ${isDragging ? 'cursor-grabbing' : ''}
-           ${autoScroll ? 'overflow-hidden' : 'overflow-x-auto'}
-         `}
-         onMouseEnter={handleMouseEnter}
-         onMouseLeave={handleMouseLeave}
-         onTouchStart={handleTouchStart}
-         onTouchEnd={handleTouchEnd}
-         style={{
-           scrollBehavior: isDragging ? 'auto' : 'smooth'
-         }}
-         role="region"
-         aria-label="Product carousel - drag to scroll freely"
-         tabIndex={0}
-       >
+      {/* Marquee Container */}
+      <div
+        ref={containerRef}
+        className={`
+          relative overflow-x-auto scrollbar-hide cursor-grab fluid-scroll drag-feedback
+          ${isDragging ? 'cursor-grabbing' : ''}
+          ${autoScroll ? 'overflow-hidden' : 'overflow-x-auto'}
+        `}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+        style={{
+          scrollBehavior: isDragging ? 'auto' : 'smooth'
+        }}
+        role="region"
+        aria-label="Product carousel - drag to scroll freely"
+        tabIndex={0}
+      >
         {/* Marquee Content */}
         <div
           ref={marqueeRef}

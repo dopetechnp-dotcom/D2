@@ -91,39 +91,15 @@ export default function OptimizedProductCard({
   return (
     <div
       ref={cardRef}
-      className="group relative bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 product-card cursor-pointer"
+      className="group relative bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 product-card cursor-pointer border border-yellow-500/20 hover:border-yellow-500/40"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
     >
-      {/* Discount Badge */}
-      {product.discount > 0 && (
-        <div className="absolute top-2 sm:top-3 left-2 sm:left-3 z-10 bg-red-500 text-white px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-xs font-bold">
-          -{product.discount}%
-        </div>
-      )}
-
-      {/* Wishlist Button */}
-      {onWishlist && (
-        <button
-          onClick={handleWishlist}
-          className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10 p-1.5 sm:p-2 bg-white/80 dark:bg-gray-800/80 rounded-full backdrop-blur-sm transition-all duration-200 hover:bg-white dark:hover:bg-gray-700"
-          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-        >
-          <Heart 
-            className={`w-3 h-3 sm:w-4 sm:h-4 transition-colors duration-200 ${
-              isWishlisted 
-                ? "fill-red-500 text-red-500" 
-                : "text-gray-600 dark:text-gray-400 hover:text-red-500"
-            }`} 
-          />
-        </button>
-      )}
-
-      {/* Image Container */}
-      <div className="relative aspect-square overflow-hidden bg-gray-100 dark:bg-gray-700">
+      {/* Top Section - Image with Gradient Background */}
+      <div className="relative aspect-square overflow-hidden bg-gradient-to-t from-red-600 via-orange-500 to-red-500">
         {!imageLoaded && (
-          <div className="absolute inset-0 skeleton animate-pulse" />
+          <div className="absolute inset-0 skeleton animate-pulse bg-gray-700" />
         )}
         
         {isInView && (
@@ -143,88 +119,85 @@ export default function OptimizedProductCard({
           />
         )}
 
-        {/* Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-      </div>
-
-      {/* Content */}
-      <div className="p-3 sm:p-4 space-y-2 sm:space-y-3">
-        {/* Category (hidden on mobile) */}
-        <div className="hidden sm:flex items-center justify-center">
-          <span className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide">
-            {product.category}
-          </span>
+        {/* Text Overlay on Image */}
+        <div className="absolute top-3 left-3 z-10">
+          <div className="text-white font-bold text-sm italic">
+            {product.category.toUpperCase()}
+          </div>
+          <div className="text-white text-xs">
+            {product.features && product.features.length > 0 ? product.features[0] : 'PREMIUM QUALITY'}
+          </div>
         </div>
 
+        {/* Stock Badge */}
+        <div className="absolute top-3 right-3 z-10">
+          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+            product.in_stock 
+              ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+              : "bg-red-500/20 text-red-400 border border-red-500/30"
+          }`}>
+            {product.in_stock ? "In Stock" : "Out of Stock"}
+          </div>
+        </div>
+
+        {/* Wishlist Button */}
+        {onWishlist && (
+          <button
+            onClick={handleWishlist}
+            className="absolute bottom-3 right-3 z-10 p-2 bg-black/50 rounded-full backdrop-blur-sm transition-all duration-200 hover:bg-black/70"
+            aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
+          >
+            <Heart 
+              className={`w-4 h-4 transition-colors duration-200 ${
+                isWishlisted 
+                  ? "fill-red-500 text-red-500" 
+                  : "text-white hover:text-red-500"
+              }`} 
+            />
+          </button>
+        )}
+
+        {/* Add to Cart Button Overlay */}
+        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+          <Button
+            onClick={handleAddToCart}
+            className="bg-yellow-400 text-black hover:bg-yellow-300 transition-all duration-200 font-semibold"
+            disabled={!product.in_stock}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add to Cart
+          </Button>
+        </div>
+      </div>
+
+      {/* Bottom Section - Product Info */}
+      <div className="p-4 bg-gray-800">
         {/* Product Name */}
-        <h3 className="font-semibold text-gray-900 dark:text-white text-xs sm:text-sm line-clamp-2 text-center">
+        <h3 className="font-bold text-white text-lg mb-2 line-clamp-2">
           {product.name}
         </h3>
-        {/* Description (hidden on mobile) */}
-        <p className="hidden sm:block text-xs text-gray-500 dark:text-gray-400 line-clamp-2 text-center">
-          {product.description}
-        </p>
 
-        {/* Price + Discount (mobile-friendly) */}
-        <div>
-          <div className="flex items-start justify-center space-x-2 sm:space-x-4">
-            <div className="flex flex-col leading-tight text-center">
-              <span className="text-sm sm:text-lg font-bold text-[#F7DD0F]">
-                Rs {product.price.toLocaleString()}
+        {/* Price */}
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col">
+            <span className="text-2xl font-bold text-yellow-400">
+              Rs {product.price.toLocaleString()}
+            </span>
+            {product.original_price > product.price && (
+              <span className="text-sm text-gray-400 line-through">
+                Rs {product.original_price.toLocaleString()}
               </span>
-              {product.original_price > product.price && (
-                <span className="text-xs sm:text-sm text-gray-500 line-through">
-                  Rs {product.original_price.toLocaleString()}
-                </span>
-              )}
-            </div>
-            <div className={`px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full text-[10px] font-medium ${
-              product.in_stock 
-                ? "bg-green-500/20 text-green-400 border border-green-500/30" 
-                : "bg-red-500/20 text-red-400 border border-red-500/30"
-            }`}>
-              {product.in_stock ? "In Stock" : "Out of Stock"}
-            </div>
+            )}
           </div>
-          {/* Mobile discount removed as requested */}
-        </div>
-
-        {/* Color and Features (hidden on mobile) */}
-        <div className="hidden sm:space-y-1">
-          {product.color && (
-            <div className="flex justify-center">
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                Color: <span className="text-gray-700 dark:text-gray-300 font-medium">{product.color}</span>
-              </span>
-            </div>
-          )}
-          {product.features && product.features.length > 0 && (
-            <div className="flex flex-wrap gap-1 justify-center">
-              {product.features.slice(0, 2).map((feature, index) => (
-                <span
-                  key={index}
-                  className="text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-1 rounded-full"
-                >
-                  {feature}
-                </span>
-              ))}
+          
+          {/* Discount Badge */}
+          {product.discount > 0 && (
+            <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+              -{product.discount}%
             </div>
           )}
         </div>
-
-        {/* Add to Cart Button */}
-        <Button
-          onClick={handleAddToCart}
-          className="w-full bg-[#F7DD0F] text-black hover:bg-[#F7DD0F]/90 transition-all duration-200 btn-primary text-xs sm:text-sm"
-          disabled={!product.in_stock}
-        >
-          <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-          {product.in_stock ? "Add to Cart" : "Out of Stock"}
-        </Button>
       </div>
-
-      {/* Hover Effect Overlay */}
-      <div className="absolute inset-0 bg-black/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
     </div>
   )
 } 

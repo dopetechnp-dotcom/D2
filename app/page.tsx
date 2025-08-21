@@ -40,6 +40,7 @@ import SupabaseCheckout from "@/components/supabase-checkout"
 import { getProducts, getDopePicks, getWeeklyPicks, type Product, getPrimaryImageUrl } from "@/lib/products-data"
 import { useCart } from "@/contexts/cart-context"
 import { CartItemEditor } from "@/components/cart-item-editor"
+import { supabase } from "@/lib/supabase"
 
 // Client-side only component to prevent hydration mismatches
 const ClientOnly = ({ children, fallback = null }: { children: React.ReactNode, fallback?: React.ReactNode }) => {
@@ -352,7 +353,7 @@ export default function DopeTechEcommerce() {
     }
   }, [])
 
-  // Product fetching with optimized loading states
+  // Product fetching with optimized loading states and real-time updates
   useEffect(() => {
     let isMounted = true
 
@@ -390,7 +391,6 @@ export default function DopeTechEcommerce() {
 
     // Add a fallback timeout to ensure loading state is always cleared
     const fallbackTimeout = setTimeout(() => {
-      console.warn('⚠️ Fallback timeout reached - clearing loading state')
       if (isMounted) {
         setIsClientLoading(false)
       }
@@ -403,6 +403,58 @@ export default function DopeTechEcommerce() {
       clearTimeout(fallbackTimeout)
     }
   }, [withLoading])
+
+  // Real-time subscription to product changes
+  useEffect(() => {
+    const subscription = supabase
+      .channel('products-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'products'
+        },
+        (payload) => {
+          // Refresh products when any change occurs
+          const refreshProducts = async () => {
+            try {
+              const updatedProducts = await getProducts()
+              setProducts(updatedProducts)
+              setCurrentProducts(updatedProducts)
+              
+              // Show a subtle notification that products were updated
+              const notification = document.createElement('div')
+              notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-4 py-2 rounded-lg shadow-lg z-50 transform transition-all duration-300 translate-x-full'
+              notification.textContent = '🔄 Products updated'
+              document.body.appendChild(notification)
+              
+              // Animate in
+              setTimeout(() => {
+                notification.classList.remove('translate-x-full')
+              }, 100)
+              
+              // Remove after 3 seconds
+              setTimeout(() => {
+                notification.classList.add('translate-x-full')
+                setTimeout(() => {
+                  document.body.removeChild(notification)
+                }, 300)
+              }, 3000)
+            } catch (error) {
+              console.error('Error refreshing products after real-time update:', error)
+            }
+          }
+          
+          refreshProducts()
+        }
+      )
+      .subscribe()
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [])
 
   // Fetch dope picks (random selection of max 6 products)
   useEffect(() => {
@@ -649,7 +701,6 @@ export default function DopeTechEcommerce() {
     // Primary: Intersection Observer
     const observer = new IntersectionObserver(
       ([entry]) => {
-        console.log('Intersection observer triggered:', entry.isIntersecting)
         setIsCategoryInView(entry.isIntersecting)
       },
       { root: null, threshold: 0.2 }
@@ -661,7 +712,6 @@ export default function DopeTechEcommerce() {
       if (el) {
         const rect = el.getBoundingClientRect()
         const isVisible = rect.top < window.innerHeight && rect.bottom > 0
-        console.log('Scroll check:', { rectTop: rect.top, windowHeight: window.innerHeight, rectBottom: rect.bottom, isVisible })
         setIsCategoryInView(isVisible)
       }
     }
@@ -679,8 +729,6 @@ export default function DopeTechEcommerce() {
 
   useEffect(() => {
     setShowBackToCategories(!isCategoryInView)
-    // Debug logging
-    console.log('Category visibility changed:', { isCategoryInView, showBackToCategories: !isCategoryInView })
   }, [isCategoryInView])
 
   // Show jump button when categories are not in view
@@ -998,7 +1046,7 @@ export default function DopeTechEcommerce() {
                       cat.id === "mouse" ? Mouse :
                       cat.id === "audio" ? Headphones :
                       cat.id === "speaker" ? Speaker :
-                                             cat.id === "monitor" ? Monitor :
+                      cat.id === "monitor" ? Monitor :
                       cat.id === "accessory" ? Cable : Grid) as React.ComponentType<{ className?: string }>
               }
             })
@@ -1333,14 +1381,14 @@ export default function DopeTechEcommerce() {
              </div>
           </div>
 
-          {/* Products Grid - Mobile Optimized 2x2 */}
-          <div 
-            data-products-section
-            className={`grid gap-4 sm:gap-4 md:gap-6 lg:gap-8 xl:gap-10 mt-4 sm:mt-8 md:mt-10 lg:mt-12 cv-auto ${
-              viewMode === "grid" 
-                ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" 
-                : "grid-cols-1"
-            }`}>
+                     {/* Products Grid - Uniform Sizing */}
+                       <div 
+              data-products-section
+              className={`grid gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 mt-4 sm:mt-8 md:mt-10 lg:mt-12 cv-auto ${
+                viewMode === "grid" 
+                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" 
+                  : "grid-cols-1"
+              }`}>
             {(isLoading || isDataLoading) ? (
               // Loading skeletons
               Array.from({ length: 12 }).map((_, index) => (
@@ -1353,18 +1401,18 @@ export default function DopeTechEcommerce() {
                 </div>
               ))
             ) : (
-              filteredProducts.map((product, index) => (
-              <div key={product.id} data-product-id={product.id} className="group animate-fade-in-up hover-lift product-card-fluid scroll-animate" style={{ animationDelay: `${index * 0.1}s` }}>
-                <div 
-                  className="relative overflow-hidden rounded-2xl card-elevated cursor-pointer"
-                  onClick={() => router.push(`/product/${product.id}`)}
-                >
-                  {/* Product Image with Enhanced Hover Effects */}
-                  <div className="relative image-container overflow-hidden rounded-2xl aspect-square">
+                             filteredProducts.map((product, index) => (
+               <div key={product.id} data-product-id={product.id} className="group animate-fade-in-up hover-lift product-card-fluid scroll-animate h-full" style={{ animationDelay: `${index * 0.1}s` }}>
+                 <div 
+                   className="relative bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40 cursor-pointer h-full flex flex-col"
+                   onClick={() => router.push(`/product/${product.id}`)}
+                 >
+                   {/* Top Section - Image with Gradient Background */}
+                   <div className="relative aspect-square overflow-hidden bg-gradient-to-t from-red-600 via-orange-500 to-red-500 flex-shrink-0">
                     <img
                       src={getPrimaryImageUrl(product)}
                       alt={product.name}
-                      className="w-full h-full object-cover object-center transition-all duration-300 group-hover:scale-110 group-hover:rotate-1"
+                      className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
                       loading="lazy"
                       decoding="async"
                       onError={(e) => {
@@ -1372,62 +1420,59 @@ export default function DopeTechEcommerce() {
                         target.src = '/placeholder-product.svg';
                       }}
                     />
-                    
-                    {/* Dark Tint Overlay for Text Legibility */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-100" />
-                    
-                    {/* Gradient Overlay on Hover */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                    {/* Mobile In-Stock badge at top-right */}
-                    {product.in_stock && (
-                      <div className="absolute top-2 right-2 sm:hidden px-2 py-1 rounded-full text-[10px] font-medium bg-green-500/20 backdrop-blur-md text-green-100 border border-green-500/30 shadow-lg">
-                        In Stock
-                      </div>
-                    )}
-
-                    {/* Product overlay content - Mobile Optimized */}
-                    <div className="absolute inset-x-0 bottom-0 p-2 sm:p-2 md:p-3 lg:p-4 pointer-events-auto">
-                      <h3 className="text-white font-semibold text-sm sm:text-xs md:text-sm lg:text-base line-clamp-2 mb-1 sm:mb-1 leading-tight">{product.name}</h3>
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col leading-tight">
-                          <span className="text-[#F7DD0F] font-bold text-sm sm:text-xs md:text-sm lg:text-base">Rs {product.price}</span>
-                          {product.original_price > product.price && (
-                            <span className="text-xs sm:text-[10px] md:text-xs lg:text-sm text-gray-300 line-through">Rs {product.original_price}</span>
-                          )}
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              addToCart(product)
-                            }}
-                            disabled={!product.in_stock}
-                            aria-label="Add to cart"
-                            className={`inline-flex items-center justify-center w-7 h-7 sm:w-6 sm:h-6 md:w-8 md:h-8 lg:w-10 lg:h-10 rounded-full shadow transition-transform active:scale-95 cursor-pointer z-10 relative ${
-                              product.in_stock
-                                ? "bg-[#F7DD0F] text-black hover:bg-[#F7DD0F]/90"
-                                : "bg-gray-500/40 text-gray-300 cursor-not-allowed"
-                            }`}
-                          >
-                            <Plus className="w-3.5 h-3.5 sm:w-3 sm:h-3 md:w-4 md:h-4 lg:w-5 lg:h-5" />
-                          </button>
-                        </div>
+                    {/* Stock Badge */}
+                    <div className="absolute top-3 right-3 z-10">
+                      <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                        product.in_stock 
+                          ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+                          : "bg-red-500/20 text-red-400 border border-red-500/30"
+                      }`}>
+                        {product.in_stock ? "In Stock" : "Out of Stock"}
                       </div>
                     </div>
 
-                    {/* Stock Status Badge */}
-                    {!product.in_stock && (
-                      <div className="absolute top-1.5 sm:top-2 md:top-3 right-1.5 sm:right-2 md:right-3 bg-red-500/20 backdrop-blur-md text-red-100 border border-red-500/30 px-1.5 sm:px-2 md:px-3 py-0.5 sm:py-1 md:py-1.5 rounded-full text-[8px] sm:text-xs md:text-sm font-medium shadow-lg">
-                        Out of Stock
+                    {/* Add to Cart Button Overlay */}
+                    <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          addToCart(product);
+                        }}
+                        className="bg-yellow-400 text-black hover:bg-yellow-300 transition-all duration-200 font-semibold px-4 py-2 rounded-full"
+                        disabled={!product.in_stock}
+                      >
+                        Add to Cart
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Bottom Section - Product Info */}
+                  <div className="p-3 sm:p-4 bg-black flex-1 flex flex-col justify-between">
+                    {/* Product Name */}
+                    <h3 className="font-bold text-white text-sm sm:text-base mb-2 line-clamp-2">
+                      {product.name}
+                    </h3>
+
+                    {/* Price */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex flex-col">
+                        <span className="text-lg sm:text-xl font-bold text-yellow-400">
+                          Rs {product.price.toLocaleString()}
+                        </span>
+                        {product.original_price > product.price && (
+                          <span className="text-xs text-gray-400 line-through">
+                            Rs {product.original_price.toLocaleString()}
+                          </span>
+                        )}
                       </div>
-                    )}
-                    
-                    {/* Quick View Overlay */}
-                    <div className="hidden sm:flex absolute inset-0 items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <div className="bg-black/80 backdrop-blur-sm text-white px-3 sm:px-4 py-2 rounded-full text-sm font-medium">
-                        Quick View
-                      </div>
+                      
+                      {/* Discount Badge */}
+                      {product.discount > 0 && (
+                        <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          -{product.discount}%
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -1454,13 +1499,13 @@ export default function DopeTechEcommerce() {
             {/* Mobile Layout Applied to Desktop - 2x2 Grid */}
             <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
               {weeklyPicks.map((product, index) => (
-                <div key={`weekly-pick-${product.id}`} className="group relative animate-fade-in-up product-card-fluid scroll-animate" style={{ animationDelay: `${index * 0.1}s` }}>
+                <div key={`weekly-pick-${product.id}`} className="group relative animate-fade-in-up product-card-fluid scroll-animate h-full" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div 
-                    className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-br from-white/5 to-white/10 border-0 sm:border sm:border-white/10 backdrop-blur-sm shadow-xl hover:shadow-2xl transition-all duration-500 hover:scale-105 cursor-pointer"
+                    className="relative bg-black rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40 cursor-pointer h-full flex flex-col"
                     onClick={() => router.push(`/product/${product.id}`)}
                   >
-                    {/* Responsive Image Container - Smaller Boxes */}
-                    <div className="w-full h-48 sm:h-56 md:h-64 lg:h-48 xl:h-56 mx-auto">
+                    {/* Top Section - Image with Gradient Background */}
+                    <div className="relative aspect-square overflow-hidden bg-gradient-to-t from-red-600 via-orange-500 to-red-500 flex-shrink-0">
                       <img
                         src={getPrimaryImageUrl(product)}
                         alt={product.name}
@@ -1470,32 +1515,60 @@ export default function DopeTechEcommerce() {
                           target.src = '/placeholder-product.svg';
                         }}
                       />
-                    </div>
-                    
-                    {/* Enhanced Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500" />
-                    
-                    {/* Product Info Overlay - Compact */}
-                    <div className="absolute bottom-0 left-0 right-0 p-2 sm:p-3 md:p-4 lg:p-4 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                      <div className="space-y-1 sm:space-y-2 md:space-y-3">
-                        <h3 className="text-white font-bold text-sm sm:text-base md:text-lg lg:text-lg mb-1 line-clamp-2 leading-tight">{product.name}</h3>
-                        <p className="text-[#F7DD0F] font-bold text-base sm:text-lg md:text-xl lg:text-xl mb-1 sm:mb-2">Rs {product.price}</p>
+
+                      {/* Stock Badge */}
+                      <div className="absolute top-3 right-3 z-10">
+                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          product.in_stock 
+                            ? "bg-green-500/20 text-green-400 border border-green-500/30" 
+                            : "bg-red-500/20 text-red-400 border border-red-500/30"
+                        }`}>
+                          {product.in_stock ? "In Stock" : "Out of Stock"}
+                        </div>
+                      </div>
+
+                      {/* Add to Cart Button Overlay */}
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
                         <button
                           onClick={(e) => {
-                            e.stopPropagation()
-                            handleAddToCartWithTracking(product)
+                            e.stopPropagation();
+                            handleAddToCartWithTracking(product);
                           }}
-                          className="bg-[#F7DD0F] text-black hover:bg-[#F7DD0F]/90 transition-all duration-200 w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 lg:w-10 lg:h-10 rounded-full flex items-center justify-center shadow-lg"
+                          className="bg-yellow-400 text-black hover:bg-yellow-300 transition-all duration-200 font-semibold px-4 py-2 rounded-full"
                           disabled={!product.in_stock}
                         >
-                          <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                          Add to Cart
                         </button>
                       </div>
                     </div>
-                    
-                    {/* Floating Elements - Smaller */}
-                    <div className="absolute top-1 sm:top-2 md:top-3 lg:top-2 left-1 sm:left-2 md:left-3 lg:left-2 opacity-0 group-hover:opacity-100 transition-all duration-500 delay-200">
-                      <div className="w-1 h-1 sm:w-2 sm:h-2 md:w-3 md:h-3 lg:w-2 lg:h-2 bg-[#F7DD0F] rounded-full animate-pulse"></div>
+
+                                         {/* Bottom Section - Product Info */}
+                     <div className="p-3 sm:p-4 bg-black flex-1 flex flex-col justify-between">
+                       {/* Product Name */}
+                       <h3 className="font-bold text-white text-sm sm:text-base mb-2 line-clamp-2">
+                         {product.name}
+                       </h3>
+
+                      {/* Price */}
+                      <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                          <span className="text-lg sm:text-xl font-bold text-yellow-400">
+                            Rs {product.price.toLocaleString()}
+                          </span>
+                          {product.original_price > product.price && (
+                            <span className="text-xs text-gray-400 line-through">
+                              Rs {product.original_price.toLocaleString()}
+                            </span>
+                          )}
+                        </div>
+                        
+                        {/* Discount Badge */}
+                        {product.discount > 0 && (
+                          <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                            -{product.discount}%
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1718,8 +1791,7 @@ export default function DopeTechEcommerce() {
           onClick={scrollToCategoryFilters}
           className="fixed bottom-6 right-4 md:bottom-8 md:right-6 z-[9999] frosted-glass-yellow frosted-glass-yellow-hover text-black p-4 rounded-full touch-manipulation flex items-center justify-center transition-all duration-300 ease-in-out shadow-lg"
           style={{ minHeight: '56px', minWidth: '56px', maxWidth: '56px', maxHeight: '56px' }}
-          aria-label="Jump to categories"
-          title={`Debug: showBackToCategories=${showBackToCategories}, showJumpButton=${showJumpButton}, isCategoryInView=${isCategoryInView}`}
+                     aria-label="Jump to categories"
         >
           {(() => {
             const item = categories[categoryIconIndex]
