@@ -60,7 +60,82 @@ const ClientOnly = ({ children, fallback = null }: { children: React.ReactNode, 
 const SplashScreen = ({ isVisible, onComplete }: { isVisible: boolean, onComplete: () => void }) => {
   const [progress, setProgress] = useState(0)
   const [currentStep, setCurrentStep] = useState(0)
-  const { logoUrl, loading: logoLoading } = useLogoUrl()
+  const [currentIconIndex, setCurrentIconIndex] = useState(0)
+  const [isIconTransitioning, setIsIconTransitioning] = useState(false)
+  
+  // Get categories from localStorage or use defaults
+  const getCategories = () => {
+    if (typeof window !== 'undefined') {
+      try {
+        const adminCategories = localStorage.getItem('adminCategories')
+        if (adminCategories) {
+          try {
+            const parsed = JSON.parse(adminCategories)
+            // Add icons to categories
+            const result = parsed.map((cat: any) => {
+              // If category has a custom icon, use it
+              if (cat.icon && cat.icon !== "Grid") {
+                if (cat.icon.startsWith('<svg')) {
+                  // Return SVG content as a special object that will be handled by SvgIcon
+                  return {
+                    ...cat,
+                    icon: { type: 'svg', content: cat.icon }
+                  }
+                } else {
+                  // Map common Lucide icon names to components
+                  const iconComponent = 
+                    cat.icon === "Gamepad2" ? Gamepad2 :
+                    cat.icon === "Laptop" ? Laptop :
+                    cat.icon === "Smartphone" ? Smartphone :
+                    cat.icon === "Headphones" ? Headphones :
+                    cat.icon === "Speaker" ? Speaker :
+                    cat.icon === "Monitor" ? Monitor :
+                    cat.icon === "Cable" ? Cable :
+                    cat.icon === "Keyboard" ? Keyboard :
+                    cat.icon === "Mouse" ? Mouse :
+                    cat.icon === "Camera" ? Camera :
+                    Grid // Default fallback
+                  
+                  return {
+                    ...cat,
+                    icon: iconComponent as React.ComponentType<{ className?: string }>
+                  }
+                }
+              }
+              
+              // Use default icon mapping for existing categories
+              return {
+                ...cat,
+                icon: (cat.id === "all" ? Grid :
+                      cat.id === "keyboard" ? Keyboard :
+                      cat.id === "mouse" ? Mouse :
+                      cat.id === "audio" ? Headphones :
+                      cat.id === "speaker" ? Speaker :
+                      cat.id === "monitor" ? Monitor :
+                      cat.id === "accessory" ? Cable : Grid) as React.ComponentType<{ className?: string }>
+              }
+            })
+            return result
+          } catch (e) {
+            console.error('Error parsing admin categories:', e)
+          }
+        }
+      } catch (error) {
+        console.error('Error accessing localStorage:', error)
+      }
+    }
+    return [
+      { id: "all", name: "All Products", icon: Grid },
+      { id: "keyboard", name: "Keyboards", icon: Keyboard },
+      { id: "mouse", name: "Mouse", icon: Mouse },
+      { id: "audio", name: "Audio", icon: Headphones },
+      { id: "speaker", name: "Speakers", icon: Speaker },
+      { id: "monitor", name: "Monitors", icon: Monitor },
+      { id: "accessory", name: "Accessories", icon: Cable },
+    ]
+  }
+
+  const categories = getCategories()
   
   const steps = [
     "Initializing DopeTech...",
@@ -90,24 +165,66 @@ const SplashScreen = ({ isVisible, onComplete }: { isVisible: boolean, onComplet
       })
     }, 800)
 
+    // Rotate through every other icon (alternating) every 1.2 seconds, excluding "All Products"
+    const iconInterval = setInterval(() => {
+      setIsIconTransitioning(true)
+      setTimeout(() => {
+        setCurrentIconIndex(prev => {
+          const nextIndex = prev + 2
+          // Skip "All Products" (index 0) and only cycle through specific categories
+          const filteredCategories = categories.filter(cat => cat.id !== "all")
+          return nextIndex >= filteredCategories.length ? 0 : nextIndex
+        })
+        setTimeout(() => setIsIconTransitioning(false), 100)
+      }, 250)
+    }, 1200)
+
     return () => {
       clearInterval(interval)
       clearInterval(stepInterval)
+      clearInterval(iconInterval)
     }
-  }, [isVisible, onComplete, steps.length])
+  }, [isVisible, onComplete, steps.length, categories.length])
 
   if (!isVisible) return null
+
+  // Filter out "All Products" and get the current category
+  const filteredCategories = categories.filter(cat => cat.id !== "all")
+  const currentCategory = filteredCategories[currentIconIndex] || filteredCategories[0]
+  const CurrentIcon = currentCategory.icon
 
   return (
     <div className="w-full h-screen bg-[#F7DD0F] flex items-center justify-center">
       <div className="text-center max-w-md mx-auto px-6">
-        {/* Logo */}
+        {/* Rotating Category Icons */}
         <div className="mb-8">
-          <img 
-            src={logoLoading ? "/logo/dopelogo.svg" : logoUrl} 
-            alt="DopeTech" 
-            className="w-48 h-48 mx-auto mb-6 animate-pulse" 
-          />
+          <div className="w-48 h-48 mx-auto mb-6 flex items-center justify-center">
+            <div className="relative">
+              {/* Icon Container - No black circle with smooth transitions */}
+              <div className="w-32 h-32 flex items-center justify-center">
+                <div className="relative w-16 h-16">
+                  <CurrentIcon 
+                    className={`w-16 h-16 text-black transition-all duration-300 ease-in-out transform ${
+                      isIconTransitioning 
+                        ? 'opacity-0 scale-75 rotate-12' 
+                        : 'opacity-100 scale-100 rotate-0 animate-pulse'
+                    }`} 
+                  />
+                </div>
+              </div>
+              
+              {/* Category Name */}
+              <div className="absolute -bottom-8 left-1/2 transform -translate-x-1/2">
+                <p className={`text-black font-bold text-sm whitespace-nowrap transition-all duration-300 ease-in-out ${
+                  isIconTransitioning 
+                    ? 'opacity-0 translate-y-2' 
+                    : 'opacity-100 translate-y-0'
+                }`}>
+                  {currentCategory.name}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
         
         {/* Loading Text */}
@@ -881,7 +998,7 @@ export default function DopeTechEcommerce() {
                       cat.id === "mouse" ? Mouse :
                       cat.id === "audio" ? Headphones :
                       cat.id === "speaker" ? Speaker :
-                      cat.id === "monitor" ? Camera :
+                                             cat.id === "monitor" ? Monitor :
                       cat.id === "accessory" ? Cable : Grid) as React.ComponentType<{ className?: string }>
               }
             })
@@ -900,7 +1017,7 @@ export default function DopeTechEcommerce() {
       { id: "mouse", name: "Mouse", icon: Mouse },
       { id: "audio", name: "Audio", icon: Headphones },
       { id: "speaker", name: "Speakers", icon: Speaker },
-      { id: "monitor", name: "Monitors", icon: Camera },
+      { id: "monitor", name: "Monitors", icon: Monitor },
       { id: "accessory", name: "Accessories", icon: Cable },
     ]
   }
