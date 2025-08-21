@@ -275,43 +275,7 @@ export function SlidingCardCarousel({
           </>
         )}
 
-        {/* Slide Indicators */}
-        {slides.length > 1 && (
-          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex space-x-4">
-            {slides.map((_, index) => (
-              <motion.button
-                key={index}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.9 }}
-                onClick={(e) => {
-                  e.stopPropagation()
-                  goToSlide(index)
-                }}
-                className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-300 ${
-                  index === currentSlide 
-                    ? 'bg-[#F7DD0F] shadow-lg' 
-                    : 'bg-white/30 hover:bg-white/50'
-                }`}
-              />
-            ))}
-          </div>
-        )}
 
-        {/* Progress Bar */}
-        {slides.length > 1 && (
-          <div className="absolute bottom-0 left-0 right-0 h-1 bg-black/30">
-            <motion.div
-              key={currentSlide}
-              initial={{ width: 0 }}
-              animate={{ width: '100%' }}
-              transition={{ 
-                duration: autoPlayInterval / 1000, 
-                ease: 'linear' 
-              }}
-              className="h-full bg-[#F7DD0F]"
-            />
-          </div>
-        )}
       </div>
     </div>
   )

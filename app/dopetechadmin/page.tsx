@@ -676,7 +676,7 @@ export default function AdminPage() {
                           <h3 className="font-semibold text-white mb-1">{product.name}</h3>
                           <p className="text-sm text-gray-400 mb-2">{product.category}</p>
                           <div className="flex items-center space-x-2 text-sm">
-                            <span className="text-green-400">Rs {product.price}</span>
+                            <span className="text-green-400 price-proxima-nova">Rs {product.price}</span>
                             {product.discount > 0 && (
                               <span className="text-orange-400">-{product.discount}%</span>
                             )}
