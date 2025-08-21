@@ -96,8 +96,8 @@ export default function OptimizedProductCard({
       onMouseLeave={() => setIsHovered(false)}
       onClick={handleCardClick}
     >
-      {/* Top Section - Image with Gradient Background */}
-      <div className="relative aspect-square overflow-hidden bg-gradient-to-t from-red-600 via-orange-500 to-red-500">
+      {/* Top Section - Image with White Background */}
+      <div className="relative aspect-square overflow-hidden bg-white">
         {!imageLoaded && (
           <div className="absolute inset-0 skeleton animate-pulse bg-gray-700" />
         )}
@@ -173,18 +173,18 @@ export default function OptimizedProductCard({
       {/* Bottom Section - Product Info */}
       <div className="p-4 bg-gray-800">
         {/* Product Name */}
-        <h3 className="font-bold text-white text-lg mb-2 line-clamp-2">
+        <h3 className="text-kelpt-a2 text-white text-lg mb-2 line-clamp-2">
           {product.name}
         </h3>
 
         {/* Price */}
         <div className="flex items-center justify-between">
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-yellow-400">
+            <span className="text-2xl price-proxima-nova text-yellow-400">
               Rs {product.price.toLocaleString()}
             </span>
             {product.original_price > product.price && (
-              <span className="text-sm text-gray-400 line-through">
+              <span className="text-sm price-proxima-nova text-gray-400 line-through">
                 Rs {product.original_price.toLocaleString()}
               </span>
             )}

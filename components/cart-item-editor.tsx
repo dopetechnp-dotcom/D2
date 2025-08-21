@@ -92,7 +92,7 @@ export function CartItemEditor({
             />
             <div>
               <h4 className="font-medium text-gray-900 dark:text-white text-sm">{product.name}</h4>
-              <p className="text-[#F7DD0F] font-bold text-sm">Rs {product.price}</p>
+                              <p className="text-[#F7DD0F] price-proxima-nova text-sm">Rs {product.price}</p>
             </div>
           </div>
 

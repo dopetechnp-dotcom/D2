@@ -514,7 +514,7 @@ export function EnhancedAdminPanel() {
                           <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">{product.description}</p>
                           
                           <div className="flex items-center justify-between">
-                            <span className="text-lg font-bold text-primary">Rs {product.price}</span>
+                            <span className="text-lg price-proxima-nova text-primary">Rs {product.price}</span>
                             <div className="flex space-x-2">
                               <motion.button
                                 whileHover={{ scale: 1.05 }}

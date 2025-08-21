@@ -14,6 +14,19 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   fallback: ['system-ui', 'arial'],
 })
 
+// Custom fonts for prices
+const proximaNovaBold = {
+  fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontWeight: '700',
+  fontStyle: 'normal',
+}
+
+const kelptA2ExtraBold = {
+  fontFamily: 'Outfit, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+  fontWeight: '800',
+  fontStyle: 'normal',
+}
+
 export const metadata: Metadata = {
   metadataBase: new URL('https://dopetechnp-aflazuh1u-dopetechnps-projects.vercel.app'),
   title: "DopeTech Nepal - Premium Tech Gear",
@@ -104,6 +117,16 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        
+        {/* Custom Fonts for Prices */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* Proxima Nova Bold alternative - Inter Bold */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" />
+        
+        {/* Kelpt A2 Extra Bold alternative - Outfit Extra Bold */}
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap" />
         
         {/* Preload critical resources */}
         <link rel="preload" href="/logo/dopelogo.svg" as="image" type="image/svg+xml" />

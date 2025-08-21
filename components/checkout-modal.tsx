@@ -573,7 +573,7 @@ export default function CheckoutModal({ isOpen, onClose, cart, total }: Checkout
                         <h3 className="font-medium text-white text-sm md:text-base truncate">{item.name}</h3>
                         <p className="text-sm text-gray-300">{item.quantity}x</p>
                       </div>
-                      <span className="font-semibold text-[#F7DD0F] text-sm md:text-base">Rs {item.price.toLocaleString()}</span>
+                      <span className="font-semibold price-proxima-nova text-[#F7DD0F] text-sm md:text-base">Rs {item.price.toLocaleString()}</span>
                     </div>
                   ))}
                 </div>

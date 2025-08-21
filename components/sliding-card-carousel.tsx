@@ -242,7 +242,7 @@ export function SlidingCardCarousel({
 
 
 
-        {/* Navigation Arrows */}
+        {/* Navigation Arrows - Desktop Only */}
         {slides.length > 1 && (
           <>
             {/* Previous Button */}
@@ -253,7 +253,7 @@ export function SlidingCardCarousel({
                 e.stopPropagation()
                 goToPrevious()
               }}
-              className="absolute left-6 top-1/2 -translate-y-1/2 z-20 p-3 sm:p-4 bg-black/30 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-black/50 hover:border-white/40 transition-all duration-300 group"
+              className="hidden md:block absolute left-6 top-1/2 -translate-y-1/2 z-20 p-3 sm:p-4 bg-black/30 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-black/50 hover:border-white/40 transition-all duration-300 group"
               aria-label="Previous slide"
             >
               <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6 group-hover:text-[#F7DD0F] transition-colors" />
@@ -267,7 +267,7 @@ export function SlidingCardCarousel({
                 e.stopPropagation()
                 goToNext()
               }}
-              className="absolute right-6 top-1/2 -translate-y-1/2 z-20 p-3 sm:p-4 bg-black/30 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-black/50 hover:border-white/40 transition-all duration-300 group"
+              className="hidden md:block absolute right-6 top-1/2 -translate-y-1/2 z-20 p-3 sm:p-4 bg-black/30 backdrop-blur-sm border border-white/20 rounded-full text-white hover:bg-black/50 hover:border-white/40 transition-all duration-300 group"
               aria-label="Next slide"
             >
               <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6 group-hover:text-[#F7DD0F] transition-colors" />

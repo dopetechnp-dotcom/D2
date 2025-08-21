@@ -161,12 +161,12 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                           {/* Enhanced Price Section */}
               <div className="space-y-3">
                 <div className="flex items-baseline gap-3">
-                  <span className="text-4xl lg:text-5xl font-bold text-[#F7DD0F]">
+                  <span className="text-4xl lg:text-5xl price-proxima-nova text-[#F7DD0F]">
                     Rs {product.discount > 0 ? Math.round(product.original_price * (1 - product.discount / 100)).toLocaleString() : product.price.toLocaleString()}
                   </span>
                   {(product.original_price > product.price || product.discount > 0) && (
                     <div className="flex items-center gap-2">
-                      <span className="text-xl text-gray-400 line-through">
+                      <span className="text-xl price-kelpt-a2 text-gray-400 line-through">
                         Rs {product.original_price.toLocaleString()}
                       </span>
                       <span className="bg-red-500 text-white px-2 py-1 rounded-md text-sm font-bold">
@@ -315,7 +315,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                   <h3 className="font-semibold text-white line-clamp-2 mb-2 leading-tight group-hover:text-[#F7DD0F] transition-colors duration-300">
                     {relatedProduct.name}
                   </h3>
-                  <p className="text-lg font-bold text-[#F7DD0F] group-hover:scale-105 transition-transform duration-300">
+                  <p className="text-lg price-proxima-nova text-[#F7DD0F] group-hover:scale-105 transition-transform duration-300">
                     Rs {relatedProduct.price.toLocaleString()}
                   </p>
                 </div>
@@ -367,7 +367,7 @@ export default function ProductPageClient({ product, relatedProducts }: ProductP
                           />
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-sm sm:text-base line-clamp-2 leading-tight text-white mb-1">{item.name}</h3>
-                            <p className="text-[#F7DD0F] font-bold text-base sm:text-lg mb-2">Rs {item.price}</p>
+                            <p className="text-[#F7DD0F] price-proxima-nova text-base sm:text-lg mb-2">Rs {item.price}</p>
                             
                             {/* Quantity Controls - Mobile Optimized */}
                             <div className="flex items-center space-x-2 sm:space-x-3">

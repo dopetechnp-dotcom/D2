@@ -1501,92 +1501,100 @@ export default function DopeTechEcommerce() {
        <section className="pt-1 sm:pt-6 md:pt-8 lg:pt-10 pb-2 sm:pb-10 md:pb-12 lg:pb-16 overflow-hidden relative section-slide-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
         <div className="container-full">
           <div className="w-full mx-auto mt-1 sm:mt-4 md:mt-6 lg:mt-8 mb-2 sm:mb-6 md:mb-8 lg:mb-10 animate-fade-in-up stagger-5">
-            <div className="text-center mb-2 sm:mb-4 md:mb-6 lg:mb-8 px-2 sm:px-4">
+            {/* Section Header - Outside the Box */}
+            <div className="text-center mb-4 sm:mb-6 md:mb-8 px-2 sm:px-4">
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-4xl text-kelpt-a2 text-white mb-1 sm:mb-3 md:mb-4 text-shadow">
                 Dope <span className="text-gradient">Weekly Picks</span>
               </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-lg text-gray-300 font-medium mb-2 sm:mb-6 md:mb-8 lg:mb-10">
+              <p className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-lg text-gray-300 font-medium mb-4 sm:mb-6 md:mb-8">
                 This week's featured selections
               </p>
             </div>
+
+            {/* Yellow Box Container - Products Only */}
+            <div className="bg-[#F7DD0F] border-2 border-[#F7DD0F] rounded-2xl p-4 sm:p-6 md:p-8 lg:p-10 mx-2 sm:mx-4 md:mx-8 lg:mx-12">
             
-            {/* Mobile Layout Applied to Desktop - 2x2 Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mx-auto px-4">
+            {/* Product Grid - Images and Text Combined */}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 mx-auto px-4">
               {weeklyPicks.map((product, index) => (
-                <div key={`weekly-pick-${product.id}`} className="group relative animate-fade-in-up product-card-fluid scroll-animate h-full" style={{ animationDelay: `${index * 0.1}s` }}>
-                  <div 
-                    className="relative bg-black rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40 cursor-pointer h-full flex flex-col"
-                    onClick={() => router.push(`/product/${product.id}`)}
-                  >
-                    {/* Top Section - Image with White Background */}
-                    <div className="relative aspect-[4/3] overflow-hidden bg-white flex-shrink-0">
-                      <img
-                        src={getPrimaryImageUrl(product)}
-                        alt={product.name}
-                        className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                        onError={(e) => {
-                          const target = e.target as HTMLImageElement;
-                          target.src = '/placeholder-product.svg';
-                        }}
-                      />
-
-                      {/* Stock Badge */}
-                      <div className="absolute top-3 right-3 z-10">
-                        <div className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          product.in_stock 
-                            ? "bg-green-500/20 text-green-400 border border-green-500/30" 
-                            : "bg-red-500/20 text-red-400 border border-red-500/30"
-                        }`}>
-                          {product.in_stock ? "In Stock" : "Out of Stock"}
-                        </div>
-                      </div>
-
-                      {/* Add to Cart Button Overlay */}
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleAddToCartWithTracking(product);
+                <div key={`weekly-pick-${product.id}`} className="animate-fade-in-up" style={{ animationDelay: `${index * 0.1}s` }}>
+                  {/* Image Section */}
+                  <div className="group relative mb-3">
+                    <div 
+                      className="relative bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                      onClick={() => router.push(`/product/${product.id}`)}
+                    >
+                      {/* Full Image Section */}
+                      <div className="relative aspect-square overflow-hidden bg-white">
+                        <img
+                          src={getPrimaryImageUrl(product)}
+                          alt={product.name}
+                          className="w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            target.src = '/placeholder-product.svg';
                           }}
-                          className="bg-yellow-400 text-black hover:bg-yellow-300 transition-all duration-200 font-semibold px-4 py-2 rounded-full"
-                          disabled={!product.in_stock}
-                        >
-                          Add to Cart
-                        </button>
-                      </div>
-                    </div>
+                        />
 
-                                         {/* Bottom Section - Product Info */}
-                     <div className="p-2 sm:p-3 bg-black flex-1 flex flex-col justify-between">
-                       {/* Product Name */}
-                       <h3 className="text-kelpt-a2 text-white text-xs sm:text-sm mb-1 line-clamp-2">
-                         {product.name}
-                       </h3>
-
-                      {/* Price */}
-                      <div className="flex items-center justify-between">
-                        <div className="flex flex-col">
-                          <span className="text-sm sm:text-base price-proxima-nova text-yellow-400">
-                            Rs {product.price.toLocaleString()}
-                          </span>
-                          {product.original_price > product.price && (
-                            <span className="text-xs price-proxima-nova text-gray-400 line-through">
-                              Rs {product.original_price.toLocaleString()}
-                            </span>
-                          )}
-                        </div>
-                        
-                        {/* Discount Badge */}
-                        {product.discount > 0 && (
-                          <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
-                            -{product.discount}%
+                        {/* Stock Badge */}
+                        <div className="absolute top-2 right-2 z-10">
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            product.in_stock 
+                              ? "bg-green-500/90 text-white" 
+                              : "bg-red-500/90 text-white"
+                          }`}>
+                            {product.in_stock ? "In Stock" : "Out of Stock"}
                           </div>
-                        )}
+                        </div>
+
+                        {/* Add to Cart Button Overlay */}
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleAddToCartWithTracking(product);
+                            }}
+                            className="bg-[#F7DD0F] text-black hover:bg-[#F7DD0F]/90 transition-all duration-200 font-semibold px-4 py-2 rounded-full"
+                            disabled={!product.in_stock}
+                          >
+                            Add to Cart
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
+
+                  {/* Text Section */}
+                  <div className="text-center">
+                    {/* Product Name */}
+                    <h3 className="text-black font-medium text-sm mb-1 line-clamp-2">
+                      {product.name}
+                    </h3>
+
+                    {/* Price */}
+                    <div className="flex items-center justify-center space-x-2">
+                      <span className="text-sm font-bold text-black">
+                        Rs {product.price.toLocaleString()}
+                      </span>
+                      
+                      {/* Discount Badge */}
+                      {product.discount > 0 && (
+                        <div className="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-bold">
+                          -{product.discount}%
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Original Price if Discounted */}
+                    {product.original_price > product.price && (
+                      <span className="text-xs text-gray-500 line-through block mt-1">
+                        Rs {product.original_price.toLocaleString()}
+                      </span>
+                    )}
+                  </div>
                 </div>
               ))}
+            </div>
             </div>
           </div>
         </div>

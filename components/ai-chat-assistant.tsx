@@ -372,7 +372,7 @@ export default function AIChatAssistant({ products, onAddToCart }: AIChatAssista
                           />
                           <div className="flex-1 min-w-0">
                             <h4 className="font-medium text-xs sm:text-sm md:text-base lg:text-lg truncate text-white">{message.product.name}</h4>
-                            <p className="text-[#F7DD0F] font-bold text-xs sm:text-sm md:text-base lg:text-lg">Rs {message.product.price.toLocaleString()}</p>
+                            <p className="text-[#F7DD0F] price-proxima-nova text-xs sm:text-sm md:text-base lg:text-lg">Rs {message.product.price.toLocaleString()}</p>
                           </div>
                           <Button
                             onClick={() => handleProductAddToCart(message.product!)}
