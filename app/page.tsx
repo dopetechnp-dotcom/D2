@@ -1110,8 +1110,8 @@ export default function DopeTechEcommerce() {
 
       {/* Enhanced Frosted Glass Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 dopetech-nav animate-fade-in-down">
-        <div className="container-full py-4">
-          <nav className="flex items-center justify-between h-auto min-h-20">
+        <div className="container-full py-2">
+          <nav className="flex items-center justify-between h-auto min-h-16">
             {/* Left Side - Mobile Menu Toggle (mobile only) */}
             <div className="flex items-center md:hidden pt-1">
               <ClientOnly fallback={<button className="p-2 touch-target flex items-center justify-center" aria-label="Menu"><Menu className="w-6 h-6 hover:text-[#F7DD0F] transition-colors" /></button>}>
@@ -1131,18 +1131,18 @@ export default function DopeTechEcommerce() {
             </div>
 
             {/* Left Side - Logo and Tagline */}
-            <div className="flex items-center space-x-3 min-w-0 flex-1 pt-1">
+            <div className="flex items-center space-x-3 min-w-0 flex-1">
               <ClientOnly fallback={
                 <img 
                   src="/logo/simple-logo.svg" 
                   alt="DopeTech" 
-                  className="w-12 h-12 logo-adaptive flex-shrink-0 origin-left scale-[1.3]" 
+                  className="w-10 h-10 logo-adaptive flex-shrink-0 origin-left scale-[1.3]" 
                 />
               }>
                 <img 
                   src={logoLoading ? "/logo/simple-logo.svg" : logoUrl} 
                   alt="DopeTech" 
-                  className="w-12 h-12 logo-adaptive flex-shrink-0 origin-left scale-[1.3]" 
+                  className="w-10 h-10 logo-adaptive flex-shrink-0 origin-left scale-[1.3]" 
                 />
               </ClientOnly>
               
@@ -1159,14 +1159,28 @@ export default function DopeTechEcommerce() {
               </div>
             </div>
 
+            {/* Center - Desktop Search Bar */}
+            <div className="hidden md:flex items-center justify-center absolute left-1/2 transform -translate-x-1/2">
+              <div className="relative w-[28rem]">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <input
+                  type="text"
+                  placeholder="Search for keyboards, mice, headphones, speakers..."
+                  value={searchDraft}
+                  onChange={(e) => setSearchDraft(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 text-sm bg-white/10 border border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#F7DD0F] focus:border-transparent text-white placeholder-gray-400"
+                />
+              </div>
+            </div>
+
 
 
             {/* Right Side - Controls */}
-            <div className="flex items-center justify-end space-x-4 flex-shrink-0 pt-1">
-              {/* Search Toggle */}
+            <div className="flex items-center justify-end space-x-4 flex-shrink-0">
+              {/* Search Toggle - Mobile Only */}
               <button
                 onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="p-2 touch-target flex items-center justify-center"
+                className="md:hidden p-2 touch-target flex items-center justify-center"
                 aria-label="Search"
               >
                 <Search className="w-6 h-6 hover:text-[#F7DD0F] transition-colors" />
@@ -1295,7 +1309,7 @@ export default function DopeTechEcommerce() {
             {/* Tagline removed - now in navigation */}
             
             {/* Hero Sliding Card Carousel */}
-            <div className="w-full mx-auto mt-8 mb-8 animate-fade-in-up stagger-3">
+            <div className="w-full mx-auto mt-2 mb-2 sm:mb-8 animate-fade-in-up stagger-3">
               <ClientOnly fallback={
                 <div className="flex items-center justify-center h-64 bg-gradient-to-br from-gray-900 to-black rounded-2xl">
                   <div className="text-center">
@@ -1318,12 +1332,12 @@ export default function DopeTechEcommerce() {
             </div>
 
             {/* Dope Picks Section - Mobile Optimized Spacing */}
-            <div className="w-full mx-auto mt-6 sm:mt-12 mb-6 sm:mb-12 animate-fade-in-up stagger-4">
-              <div className="text-center mb-4 sm:mb-8 px-4">
-                                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 text-shadow">
+            <div className="w-full mx-auto mt-1 sm:mt-6 mb-2 sm:mb-12 animate-fade-in-up stagger-4">
+              <div className="text-center mb-2 sm:mb-8 px-2 sm:px-4">
+                                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-4xl text-kelpt-a2 text-white mb-1 sm:mb-3 text-shadow">
                    Dope <span className="text-gradient">Picks</span>
                  </h2>
-                <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium">
+                <p className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-lg text-gray-300 font-medium">
                   Handpicked for you
                 </p>
               </div>
@@ -1341,17 +1355,17 @@ export default function DopeTechEcommerce() {
             </div>
             
             {/* Dope Categories Header - Mobile Optimized Spacing */}
-            <div className="text-center mb-4 sm:mb-8 animate-fade-in-up stagger-4 px-4">
-                                                             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 text-shadow">
+            <div className="text-center mb-1 sm:mb-4 animate-fade-in-up stagger-4 px-2 sm:px-4">
+                                                             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-4xl text-kelpt-a2 text-white mb-1 sm:mb-3 text-shadow">
                    Dope <span className="text-gradient">Categories</span>
                  </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium">
+              <p className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-lg text-gray-300 font-medium">
                 Filter by your favorite tech categories
               </p>
             </div>
 
                          {/* Category Filter - Mobile Optimized Spacing */}
-             <div ref={categorySectionRef} className="mb-6 sm:mb-12 animate-fade-in-up stagger-5">
+             <div ref={categorySectionRef} className="mb-2 sm:mb-12 animate-fade-in-up stagger-5">
                {/* Horizontal Scroll Layout for Mobile, Flex Wrap for Desktop */}
                <div className="flex overflow-x-auto scrollbar-hide gap-3 sm:flex-wrap sm:justify-center w-full px-4">
                  {categories.map((category, index) => (
@@ -1484,14 +1498,14 @@ export default function DopeTechEcommerce() {
       </section>
 
              {/* Dope Weekly Picks Section - Mobile Optimized Spacing */}
-       <section className="pt-2 sm:pt-6 md:pt-8 lg:pt-10 pb-6 sm:pb-10 md:pb-12 lg:pb-16 overflow-hidden relative section-slide-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
+       <section className="pt-1 sm:pt-6 md:pt-8 lg:pt-10 pb-2 sm:pb-10 md:pb-12 lg:pb-16 overflow-hidden relative section-slide-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
         <div className="container-full">
           <div className="w-full mx-auto mt-1 sm:mt-4 md:mt-6 lg:mt-8 mb-2 sm:mb-6 md:mb-8 lg:mb-10 animate-fade-in-up stagger-5">
-            <div className="text-center mb-2 sm:mb-4 md:mb-6 lg:mb-8 px-4">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 md:mb-4 text-shadow">
+            <div className="text-center mb-2 sm:mb-4 md:mb-6 lg:mb-8 px-2 sm:px-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-4xl text-kelpt-a2 text-white mb-1 sm:mb-3 md:mb-4 text-shadow">
                 Dope <span className="text-gradient">Weekly Picks</span>
               </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium mb-4 sm:mb-6 md:mb-8 lg:mb-10">
+              <p className="text-base sm:text-lg md:text-xl lg:text-lg xl:text-lg text-gray-300 font-medium mb-2 sm:mb-6 md:mb-8 lg:mb-10">
                 This week's featured selections
               </p>
             </div>
@@ -1579,14 +1593,14 @@ export default function DopeTechEcommerce() {
       </section>
 
              {/* GIF Section - Moved from hero area */}
-       <section className="pt-6 sm:pt-8 md:pt-12 lg:pt-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24 overflow-hidden relative section-fade-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
+       <section className="pt-2 sm:pt-8 md:pt-12 lg:pt-16 pb-2 sm:pb-16 md:pb-20 lg:pb-24 overflow-hidden relative section-fade-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
         <div className="container-full">
           {/* Section Header */}
-          <div className="text-center mb-4 sm:mb-6 md:mb-8 lg:mb-10 animate-fade-in-up px-4">
-                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 md:mb-4 text-shadow">
+          <div className="text-center mb-2 sm:mb-6 md:mb-8 lg:mb-10 animate-fade-in-up px-2 sm:px-4">
+                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-4xl xl:text-4xl text-kelpt-a2 text-white mb-1 sm:mb-3 md:mb-4 text-shadow">
                Dope <span className="text-gradient">Recommendations</span>
              </h2>
-            <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 font-medium">
+            <p className="text-sm sm:text-base md:text-lg lg:text-lg xl:text-lg text-gray-300 font-medium">
               Grab these and more on our Instagram
             </p>
           </div>
