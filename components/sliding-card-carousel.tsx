@@ -123,7 +123,7 @@ export function SlidingCardCarousel({
   
   if (!slides || slides.length === 0) {
     return (
-      <div className={`flex items-center justify-center h-48 sm:h-64 bg-gradient-to-br from-black via-[#F7DD0F]/20 to-black rounded-2xl ${className}`}>
+      <div className={`flex items-center justify-center h-32 sm:h-48 bg-gradient-to-br from-black via-[#F7DD0F]/20 to-black rounded-2xl ${className}`}>
         <div className="text-center">
           <p className="text-[#F7DD0F] font-semibold">No Hero Images Available</p>
           <p className="text-gray-400 text-sm">Please upload some images in the admin panel</p>
@@ -150,7 +150,7 @@ export function SlidingCardCarousel({
        tabIndex={0}
      >
       {/* Main Carousel Container */}
-             <div className="relative h-full min-h-[200px] sm:min-h-[400px] md:min-h-[480px]">
+             <div className="relative h-full min-h-[150px] sm:min-h-[300px] md:min-h-[360px]">
         <AnimatePresence mode="wait">
                     <motion.div
             key={safeCurrentSlide}

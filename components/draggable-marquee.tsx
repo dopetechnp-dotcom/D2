@@ -23,6 +23,26 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
   pauseOnHover = true,
   showScrollHint = true
 }) => {
+  // Function to generate exactly 10 unique items for the marquee
+  const generateMarqueeItems = () => {
+    if (products.length === 0) return [];
+    
+    const targetItems = 10;
+    const items = [];
+    
+    // Only use unique products, don't repeat
+    for (let i = 0; i < Math.min(targetItems, products.length); i++) {
+      const product = products[i];
+      items.push({
+        ...product,
+        uniqueKey: `marquee-item-${i}-${product.id}`
+      });
+    }
+    
+    return items;
+  };
+
+  const marqueeItems = generateMarqueeItems();
   const marqueeRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [showHint, setShowHint] = useState(showScrollHint);
@@ -121,7 +141,7 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
   };
 
   return (
-    <div className={`relative overflow-hidden ${className}`}>
+    <div className={`relative overflow-hidden w-full marquee-full-width ${className}`}>
       {/* Scroll Hint */}
       {showHint && (
         <div className="absolute top-4 right-4 z-10 flex items-center space-x-2 bg-black/20 backdrop-blur-sm rounded-full px-3 py-2 text-white text-sm animate-pulse">
@@ -157,7 +177,7 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
         <div
           ref={marqueeRef}
           className={`
-            flex space-x-4 sm:space-x-6 md:space-x-8 min-w-max
+            flex space-x-4 sm:space-x-6 md:space-x-8 marquee-content-full
             ${autoScroll ? 'animate-marquee' : ''}
             ${isUserInteracting ? 'user-scrolling' : ''}
           `}
@@ -166,13 +186,13 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
             animationPlayState: isPaused || isUserInteracting ? 'paused' : 'running'
           }}
         >
-          {/* First set of products */}
-          {products.map((product, index) => (
+          {/* Marquee Items - Exactly 10 items */}
+          {marqueeItems.map((product, index) => (
             <div 
-              key={`marquee-first-${product.id}`} 
+              key={product.uniqueKey} 
               className="group relative flex-shrink-0"
             >
-              <div className="relative overflow-hidden rounded-2xl w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 bg-gradient-to-br from-white/5 to-white/10 border border-white/10 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <div className="relative overflow-hidden rounded-2xl w-40 h-32 sm:w-48 sm:h-36 md:w-56 md:h-40 bg-gradient-to-br from-white/5 to-white/10 border border-white/10 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
                 <img
                   src={getPrimaryImageUrl(product)}
                   alt={product.name}
@@ -189,8 +209,8 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
                 
                 {/* Product Info Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-white font-bold text-sm sm:text-base md:text-lg mb-2 line-clamp-2">{product.name}</h3>
-                  <p className="text-[#F7DD0F] font-bold text-sm sm:text-base md:text-lg mb-3">Rs {product.price}</p>
+                  <h3 className="text-white text-kelpt-a2 text-sm sm:text-base md:text-lg mb-2 line-clamp-2">{product.name}</h3>
+                  <p className="text-[#F7DD0F] price-proxima-nova text-sm sm:text-base md:text-lg mb-3">Rs {product.price}</p>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
@@ -206,12 +226,12 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
           ))}
           
           {/* Duplicate set for seamless loop (only if auto-scrolling) */}
-          {autoScroll && products.map((product, index) => (
+          {autoScroll && marqueeItems.map((product, index) => (
             <div 
-              key={`marquee-second-${product.id}`} 
+              key={`duplicate-${product.uniqueKey}`} 
               className="group relative flex-shrink-0"
             >
-              <div className="relative overflow-hidden rounded-2xl w-40 h-40 sm:w-48 sm:h-48 md:w-56 md:h-56 bg-gradient-to-br from-white/5 to-white/10 border border-white/10 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
+              <div className="relative overflow-hidden rounded-2xl w-40 h-32 sm:w-48 sm:h-36 md:w-56 md:h-40 bg-gradient-to-br from-white/5 to-white/10 border border-white/10 backdrop-blur-sm shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105">
                 <img
                   src={getPrimaryImageUrl(product)}
                   alt={product.name}
@@ -228,8 +248,8 @@ export const DraggableMarquee: React.FC<DraggableMarqueeProps> = ({
                 
                 {/* Product Info Overlay */}
                 <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-5 transform translate-y-full group-hover:translate-y-0 transition-transform duration-300">
-                  <h3 className="text-white font-bold text-sm sm:text-base md:text-lg mb-2 line-clamp-2">{product.name}</h3>
-                  <p className="text-[#F7DD0F] font-bold text-sm sm:text-base md:text-lg mb-3">Rs {product.price}</p>
+                  <h3 className="text-white text-kelpt-a2 text-sm sm:text-base md:text-lg mb-2 line-clamp-2">{product.name}</h3>
+                  <p className="text-[#F7DD0F] price-proxima-nova text-sm sm:text-base md:text-lg mb-3">Rs {product.price}</p>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();

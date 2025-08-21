@@ -1110,7 +1110,7 @@ export default function DopeTechEcommerce() {
 
       {/* Enhanced Frosted Glass Navigation */}
       <header className="fixed top-0 left-0 right-0 z-50 dopetech-nav animate-fade-in-down">
-        <div className="container-max py-4">
+        <div className="container-full py-4">
           <nav className="flex items-center justify-between h-auto min-h-20">
             {/* Left Side - Mobile Menu Toggle (mobile only) */}
             <div className="flex items-center md:hidden pt-1">
@@ -1288,7 +1288,7 @@ export default function DopeTechEcommerce() {
 
              {/* Welcome Section - Enhanced Spacing */}
        <section className="safe-top section-padding relative mobile-hero section-fade-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)', paddingTop: headerOffset }}>
-        <div className="container-max">
+        <div className="container-full">
           {/* Page Header */}
           <div className="text-center mb-8">
             {/* Hero heading removed - now in navigation */}
@@ -1319,10 +1319,10 @@ export default function DopeTechEcommerce() {
 
             {/* Dope Picks Section - Mobile Optimized Spacing */}
             <div className="w-full mx-auto mt-6 sm:mt-12 mb-6 sm:mb-12 animate-fade-in-up stagger-4">
-              <div className="text-center mb-4 sm:mb-12">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-6 text-shadow">
-                  Dope <span className="text-gradient">Picks</span>
-                </h2>
+              <div className="text-center mb-4 sm:mb-8 px-4">
+                                 <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 text-shadow">
+                   Dope <span className="text-gradient">Picks</span>
+                 </h2>
                 <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium">
                   Handpicked for you
                 </p>
@@ -1332,7 +1332,7 @@ export default function DopeTechEcommerce() {
               <DraggableMarquee
                 products={dopePicks}
                 onAddToCart={handleAddToCartWithTracking}
-                className="cv-auto"
+                className="w-full"
                 autoScroll={true}
                 scrollSpeed={25}
                 pauseOnHover={true}
@@ -1341,24 +1341,24 @@ export default function DopeTechEcommerce() {
             </div>
             
             {/* Dope Categories Header - Mobile Optimized Spacing */}
-            <div className="text-center mb-4 sm:mb-12 animate-fade-in-up stagger-4">
-                              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-6 text-shadow">
-                  Dope <span className="text-gradient">Categories</span>
-                </h2>
+            <div className="text-center mb-4 sm:mb-8 animate-fade-in-up stagger-4 px-4">
+                                                             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 text-shadow">
+                   Dope <span className="text-gradient">Categories</span>
+                 </h2>
               <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium">
                 Filter by your favorite tech categories
               </p>
             </div>
 
                          {/* Category Filter - Mobile Optimized Spacing */}
-             <div ref={categorySectionRef} className="mb-6 sm:mb-12 px-4 animate-fade-in-up stagger-5">
+             <div ref={categorySectionRef} className="mb-6 sm:mb-12 animate-fade-in-up stagger-5">
                {/* Horizontal Scroll Layout for Mobile, Flex Wrap for Desktop */}
-               <div className="flex overflow-x-auto scrollbar-hide gap-3 sm:flex-wrap sm:justify-center w-full">
+               <div className="flex overflow-x-auto scrollbar-hide gap-3 sm:flex-wrap sm:justify-center w-full px-4">
                  {categories.map((category, index) => (
                    <div key={category.id} className="relative animate-fade-in-up flex-shrink-0 sm:flex-shrink" style={{ animationDelay: `${index * 0.1}s` }}>
                      <button
                        onClick={() => handleCategoryClick(category.id)}
-                       className={`flex items-center space-x-2 px-4 py-3 rounded-full transition-all duration-300 cursor-pointer text-sm min-h-[48px] shadow-lg whitespace-nowrap ${
+                       className={`flex items-center space-x-1 sm:space-x-2 px-2 sm:px-4 py-2 sm:py-3 rounded-full transition-all duration-300 cursor-pointer text-xs sm:text-sm min-h-[40px] sm:min-h-[48px] shadow-lg whitespace-nowrap ${
                          selectedCategory === category.id
                            ? "bg-[#F7DD0F] text-black font-bold"
                            : "bg-white/10 hover:bg-white/15 font-medium border border-white/10"
@@ -1369,7 +1369,7 @@ export default function DopeTechEcommerce() {
                        <div className={`flex-shrink-0 ${
                          selectedCategory === category.id ? "text-black" : "text-[#F7DD0F]"
                        }`}>
-                         {renderCategoryIcon(category.icon, "w-5 h-5")}
+                         {renderCategoryIcon(category.icon, "w-4 h-4 sm:w-5 sm:h-5")}
                        </div>
                        
                        {/* Category Name */}
@@ -1386,7 +1386,7 @@ export default function DopeTechEcommerce() {
               data-products-section
               className={`grid gap-2 sm:gap-3 md:gap-4 lg:gap-5 xl:gap-6 mt-4 sm:mt-8 md:mt-10 lg:mt-12 cv-auto ${
                 viewMode === "grid" 
-                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5" 
+                  ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6" 
                   : "grid-cols-1"
               }`}>
             {(isLoading || isDataLoading) ? (
@@ -1407,8 +1407,8 @@ export default function DopeTechEcommerce() {
                    className="relative bg-gray-800 rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40 cursor-pointer h-full flex flex-col"
                    onClick={() => router.push(`/product/${product.id}`)}
                  >
-                   {/* Top Section - Image with Gradient Background */}
-                   <div className="relative aspect-square overflow-hidden bg-gradient-to-t from-red-600 via-orange-500 to-red-500 flex-shrink-0">
+                   {/* Top Section - Image with White Background */}
+                   <div className="relative aspect-[4/3] overflow-hidden bg-white flex-shrink-0">
                     <img
                       src={getPrimaryImageUrl(product)}
                       alt={product.name}
@@ -1448,20 +1448,20 @@ export default function DopeTechEcommerce() {
                   </div>
 
                   {/* Bottom Section - Product Info */}
-                  <div className="p-3 sm:p-4 bg-black flex-1 flex flex-col justify-between">
+                  <div className="p-2 sm:p-3 bg-black flex-1 flex flex-col justify-between">
                     {/* Product Name */}
-                    <h3 className="font-bold text-white text-sm sm:text-base mb-2 line-clamp-2">
+                    <h3 className="text-kelpt-a2 text-white text-xs sm:text-sm mb-1 line-clamp-2">
                       {product.name}
                     </h3>
 
                     {/* Price */}
                     <div className="flex items-center justify-between">
                       <div className="flex flex-col">
-                        <span className="text-lg sm:text-xl font-bold text-yellow-400">
+                        <span className="text-sm sm:text-base price-proxima-nova text-yellow-400">
                           Rs {product.price.toLocaleString()}
                         </span>
                         {product.original_price > product.price && (
-                          <span className="text-xs text-gray-400 line-through">
+                          <span className="text-xs price-proxima-nova text-gray-400 line-through">
                             Rs {product.original_price.toLocaleString()}
                           </span>
                         )}
@@ -1485,27 +1485,27 @@ export default function DopeTechEcommerce() {
 
              {/* Dope Weekly Picks Section - Mobile Optimized Spacing */}
        <section className="pt-2 sm:pt-6 md:pt-8 lg:pt-10 pb-6 sm:pb-10 md:pb-12 lg:pb-16 overflow-hidden relative section-slide-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-full">
           <div className="w-full mx-auto mt-1 sm:mt-4 md:mt-6 lg:mt-8 mb-2 sm:mb-6 md:mb-8 lg:mb-10 animate-fade-in-up stagger-5">
-            <div className="text-center mb-2 sm:mb-6 md:mb-8 lg:mb-10">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 text-shadow">
+            <div className="text-center mb-2 sm:mb-4 md:mb-6 lg:mb-8 px-4">
+              <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 md:mb-4 text-shadow">
                 Dope <span className="text-gradient">Weekly Picks</span>
               </h2>
-              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium mb-6 sm:mb-8 md:mb-10 lg:mb-12">
+              <p className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-300 font-medium mb-4 sm:mb-6 md:mb-8 lg:mb-10">
                 This week's featured selections
               </p>
             </div>
             
             {/* Mobile Layout Applied to Desktop - 2x2 Grid */}
-            <div className="grid grid-cols-2 gap-4 sm:gap-6 md:gap-8 max-w-5xl mx-auto">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mx-auto px-4">
               {weeklyPicks.map((product, index) => (
                 <div key={`weekly-pick-${product.id}`} className="group relative animate-fade-in-up product-card-fluid scroll-animate h-full" style={{ animationDelay: `${index * 0.1}s` }}>
                   <div 
                     className="relative bg-black rounded-xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-yellow-500/20 hover:border-yellow-500/40 cursor-pointer h-full flex flex-col"
                     onClick={() => router.push(`/product/${product.id}`)}
                   >
-                    {/* Top Section - Image with Gradient Background */}
-                    <div className="relative aspect-square overflow-hidden bg-gradient-to-t from-red-600 via-orange-500 to-red-500 flex-shrink-0">
+                    {/* Top Section - Image with White Background */}
+                    <div className="relative aspect-[4/3] overflow-hidden bg-white flex-shrink-0">
                       <img
                         src={getPrimaryImageUrl(product)}
                         alt={product.name}
@@ -1543,20 +1543,20 @@ export default function DopeTechEcommerce() {
                     </div>
 
                                          {/* Bottom Section - Product Info */}
-                     <div className="p-3 sm:p-4 bg-black flex-1 flex flex-col justify-between">
+                     <div className="p-2 sm:p-3 bg-black flex-1 flex flex-col justify-between">
                        {/* Product Name */}
-                       <h3 className="font-bold text-white text-sm sm:text-base mb-2 line-clamp-2">
+                       <h3 className="text-kelpt-a2 text-white text-xs sm:text-sm mb-1 line-clamp-2">
                          {product.name}
                        </h3>
 
                       {/* Price */}
                       <div className="flex items-center justify-between">
                         <div className="flex flex-col">
-                          <span className="text-lg sm:text-xl font-bold text-yellow-400">
+                          <span className="text-sm sm:text-base price-proxima-nova text-yellow-400">
                             Rs {product.price.toLocaleString()}
                           </span>
                           {product.original_price > product.price && (
-                            <span className="text-xs text-gray-400 line-through">
+                            <span className="text-xs price-proxima-nova text-gray-400 line-through">
                               Rs {product.original_price.toLocaleString()}
                             </span>
                           )}
@@ -1580,12 +1580,12 @@ export default function DopeTechEcommerce() {
 
              {/* GIF Section - Moved from hero area */}
        <section className="pt-6 sm:pt-8 md:pt-12 lg:pt-16 pb-12 sm:pb-16 md:pb-20 lg:pb-24 overflow-hidden relative section-fade-in" style={{ background: 'linear-gradient(135deg, #000000 0%, #1a1a0a 50%, #000000 100%)' }}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="container-full">
           {/* Section Header */}
-          <div className="text-center mb-6 sm:mb-8 md:mb-10 lg:mb-12 animate-fade-in-up">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4 md:mb-6 text-shadow">
-              Dope <span className="text-gradient">Recommendations</span>
-            </h2>
+          <div className="text-center mb-4 sm:mb-6 md:mb-8 lg:mb-10 animate-fade-in-up px-4">
+                         <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl text-kelpt-a2 text-white mb-2 sm:mb-3 md:mb-4 text-shadow">
+               Dope <span className="text-gradient">Recommendations</span>
+             </h2>
             <p className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-300 font-medium">
               Grab these and more on our Instagram
             </p>
@@ -1593,7 +1593,7 @@ export default function DopeTechEcommerce() {
 
           {/* Video Container */}
           {videoUrl && (
-            <div className="w-full mx-auto animate-fade-in-up borderless-glow cv-auto rounded-2xl overflow-hidden ring-1 ring-white/10">
+            <div className="w-full mx-auto animate-fade-in-up borderless-glow cv-auto rounded-2xl overflow-hidden ring-1 ring-white/10 px-4">
               <video
                 src={videoUrl}
                 className="w-full h-40 sm:h-48 md:h-56 lg:h-64 xl:h-72 2xl:h-80 shadow-xl object-cover object-center"
@@ -1662,8 +1662,8 @@ export default function DopeTechEcommerce() {
                             }}
                           />
                           <div className="flex-1 min-w-0">
-                            <h3 className="font-semibold text-sm sm:text-base line-clamp-2 leading-tight text-white mb-1">{item.name}</h3>
-                            <p className="text-[#F7DD0F] font-bold text-base sm:text-lg mb-2">Rs {item.price}</p>
+                                                                                      <h3 className="text-kelpt-a2 text-sm sm:text-base line-clamp-2 leading-tight text-white mb-1">{item.name}</h3>
+                             <p className="text-[#F7DD0F] price-proxima-nova text-base sm:text-lg mb-2">Rs {item.price}</p>
                             
                             {/* Quantity Controls - Mobile Optimized */}
                             <div className="flex items-center space-x-2 sm:space-x-3">
@@ -1732,9 +1732,9 @@ export default function DopeTechEcommerce() {
                 <div className="border-t border-[#F7DD0F]/20 p-4 sm:p-6">
                   <div className="flex justify-between items-center mb-4 sm:mb-4">
                     <span className="text-base sm:text-lg font-semibold text-white">Total:</span>
-                    <span className="text-lg sm:text-xl md:text-2xl font-bold text-[#F7DD0F]">
-                      Rs {getCartTotal().toFixed(2)}
-                    </span>
+                                         <span className="text-lg sm:text-xl md:text-2xl price-proxima-nova text-[#F7DD0F]">
+                       Rs {getCartTotal().toFixed(2)}
+                     </span>
                   </div>
                   <button 
                     onClick={handleCheckout}
@@ -1752,8 +1752,8 @@ export default function DopeTechEcommerce() {
 
       {/* Footer - Enhanced Spacing */}
       <footer className="bg-black py-6 sm:py-8 md:py-10 lg:py-12 border-t-2 border-[#F7DD0F]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="container-full">
+          <div className="flex flex-col md:flex-row justify-between items-center px-4">
             <div className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 mb-6 sm:mb-8 md:mb-0">
               <ClientOnly fallback={
                 <img 
